@@ -50,6 +50,7 @@ public class ScoreFramgment extends Fragment {
         h_v=view.findViewById(R.id.h_v);
         allScore_tv= (TextView) view.findViewById(R.id.allScore_tv);
         swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setColorSchemeColors(R.color.mainColor);
         scoreAdapter=new ScoreAdapter(getActivity(),scoreData);
 
         findFromDb();   //先查数据库

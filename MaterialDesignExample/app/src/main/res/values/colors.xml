@@ -31,7 +31,7 @@
 
     <color name="blue_900">#2a36b1</color>
     <color name="blue_700">#455ede</color>
-    <color name="blue_500">#5677fc</color>
+    <color name="blue_500">#2196f3</color>
     <color name="blue_400">#738ffe</color>
     <color name="blue_50">#e7e9fd</color>
 
@@ -95,4 +95,6 @@
     <color name="ffffff">#ffffff</color>
     <color name="dddddd">#dddddd</color>
     <color name="eeeeee">#eeeeee</color>
+
+    <color name="mainColor">@color/blue_500</color>
 </resources>

@@ -94,7 +94,7 @@ public class NewsActivity extends AppCompatActivity {
 
         //设置actionBar的标题
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3b8dff")));
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2196f3")));
         actionBar.setTitle("新闻");
         //actionBar.setSubtitle(data.getDate());
 

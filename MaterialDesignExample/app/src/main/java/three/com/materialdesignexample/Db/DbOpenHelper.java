@@ -54,4 +54,8 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+    public static final String STATUS_TABLE="Status";
+    public static final String STATUS_CONTETT="content";
+    public static final String STATUS_USER="user";
 }

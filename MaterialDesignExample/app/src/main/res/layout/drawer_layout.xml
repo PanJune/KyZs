@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:background="#3b8dff">
+            android:background="@color/mainColor">
         </android.support.v7.widget.Toolbar>
         <FrameLayout
             android:id="@+id/container"

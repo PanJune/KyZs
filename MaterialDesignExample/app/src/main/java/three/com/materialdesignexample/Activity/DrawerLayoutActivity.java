@@ -19,6 +19,7 @@ import three.com.materialdesignexample.Framgment.AboutFragment;
 import three.com.materialdesignexample.Framgment.CourseFramgment;
 import three.com.materialdesignexample.Framgment.NewsFramgment;
 import three.com.materialdesignexample.Framgment.ScoreFramgment;
+import three.com.materialdesignexample.Framgment.StatusFramgment;
 import three.com.materialdesignexample.Models.News;
 import three.com.materialdesignexample.R;
 import three.com.materialdesignexample.Util.HandleResponseUtil;
@@ -53,6 +54,8 @@ public class DrawerLayoutActivity extends AppCompatActivity {
         setupDrawerContent(navigationView);
         UmengUpdateAgent.update(this);
 
+
+
         switchToCourse();  //主界面选为课表
 
 
@@ -80,16 +83,25 @@ public class DrawerLayoutActivity extends AppCompatActivity {
                             case R.id.school_score:
                                 switchToScore();
                                 break;
+                            case R.id.school_status:
+                                switchToStatus();
+                                break;
                             case R.id.about:
                                 switchToAbout();
                                 break;
-
                         }
                         menuItem.setChecked(true);
                         drawerLayout.closeDrawers();
                         return true;
                     }
                 });
+    }
+
+    private void switchToStatus() {
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new StatusFramgment()).commit();
+
+        toolbar.setTitle(R.string.school_status);
     }
 
     private void switchToScore() {
