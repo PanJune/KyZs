@@ -1,6 +1,5 @@
 package three.com.materialdesignexample.Framgment;
 
-import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -24,6 +23,7 @@ import three.com.materialdesignexample.Models.Score;
 import three.com.materialdesignexample.R;
 import three.com.materialdesignexample.Util.HandleResponseUtil;
 import three.com.materialdesignexample.Util.HttpUtil;
+import three.com.materialdesignexample.widget.ProgressDialogHelper;
 
 /**
  * Created by Administrator on 2015/10/21.
@@ -36,7 +36,6 @@ public class ScoreFramgment extends Fragment {
     private Button importBtn;
     private ListView scoreLv;
     private ArrayList<Score> scoreData= HandleResponseUtil.scores;
-    private ProgressDialog progressDialog;
     private TextView allScore_tv;
     private ScoreAdapter scoreAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -55,6 +54,49 @@ public class ScoreFramgment extends Fragment {
 
         findFromDb();   //先查数据库
 
+        setRefreshListener();
+
+        setImportBtnListener();
+
+        return view;
+    }
+
+    private void setImportBtnListener() {
+        importBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HttpUtil.getScoreHtml(getActivity(), new CallBack() {
+                    @Override
+                    public void onStart() {
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ProgressDialogHelper.showProgressDialog(getActivity(),
+                                        "正在导入，这可能需要一点时间...");
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onFinsh(String response) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                saveAllScore();
+                                initView();
+                                ProgressDialogHelper.closeProgressDialog();
+                            }
+                        });
+                        Log.d("TAG", "handle score OK");
+                    }
+                });
+            }
+        });
+    }
+
+    private void setRefreshListener() {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -74,40 +116,6 @@ public class ScoreFramgment extends Fragment {
                 });
             }
         });
-
-        importBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HttpUtil.getScoreHtml(getActivity(), new CallBack() {
-                    @Override
-                    public void onStart() {
-
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showProgressDialog();
-                            }
-                        });
-
-                    }
-
-                    @Override
-                    public void onFinsh(String response) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                saveAllScore();
-                                initView();
-                                closeProgressDialog();
-                            }
-                        });
-                        Log.d("TAG", "handle score OK");
-                    }
-                });
-            }
-        });
-
-        return view;
     }
 
     private void findFromDb() {
@@ -136,20 +144,7 @@ public class ScoreFramgment extends Fragment {
         h_v.setVisibility(View.VISIBLE);
     }
 
-    public  void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("正在导入，这可能需要一点时间...");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        progressDialog.show();
-    }
 
-    private  void closeProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
-    }
 
     private void setAllScore() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());

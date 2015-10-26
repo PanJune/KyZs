@@ -135,4 +135,8 @@ public class Db {
         }
         return false;
     }
+
+    public void clear(String tableName){
+        sqlDb.execSQL("DELETE FROM " +tableName);
+    }
 }

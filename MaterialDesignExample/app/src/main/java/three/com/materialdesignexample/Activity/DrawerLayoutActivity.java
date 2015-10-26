@@ -1,6 +1,5 @@
 package three.com.materialdesignexample.Activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -24,6 +23,7 @@ import three.com.materialdesignexample.Models.News;
 import three.com.materialdesignexample.R;
 import three.com.materialdesignexample.Util.HandleResponseUtil;
 import three.com.materialdesignexample.Util.HttpUtil;
+import three.com.materialdesignexample.widget.ProgressDialogHelper;
 
 /**
  * Created by Administrator on 2015/10/8.
@@ -34,7 +34,6 @@ public class DrawerLayoutActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout=null;
     private ActionBarDrawerToggle drawerToggle=null;
     private NavigationView navigationView=null;
-    public  ProgressDialog progressDialog=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,17 +102,17 @@ public class DrawerLayoutActivity extends AppCompatActivity {
     private void switchToNews() {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new NewsFramgment()).commit();
         if(HttpUtil.datamap.values().size()==0){
-            showProgressDialog();
+            ProgressDialogHelper.showProgressDialog(this, "正在加载...");
             HttpUtil.getHtmlUtil(this, News.NEWS_INDEX, new CallBack() {
                 @Override
                 public void onStart() {
-                    showProgressDialog();
+                    //ProgressDialogHelper.showProgressDialog(DrawerLayoutActivity.this, "正在加载...");
                 }
 
                 @Override
                 public void onFinsh(String response) {
                     HandleResponseUtil.parseTitleData(response);
-                    closeProgressDialog();
+                    ProgressDialogHelper.closeProgressDialog();
                 }
             }, Request.Method.GET, null);
         }
@@ -135,20 +134,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.about);
     }
 
-    public  void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("正在加载...");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        progressDialog.show();
-    }
 
-    private  void closeProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
-    }
 
     @Override
     public void onResume() {

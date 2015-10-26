@@ -1,7 +1,6 @@
 package three.com.materialdesignexample.Activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -21,6 +20,7 @@ import three.com.materialdesignexample.CallBack;
 import three.com.materialdesignexample.R;
 import three.com.materialdesignexample.Util.HttpUtil;
 import three.com.materialdesignexample.Util.SafeCodeUtil;
+import three.com.materialdesignexample.widget.ProgressDialogHelper;
 
 /**
  * Created by Administrator on 2015/10/14.
@@ -32,7 +32,7 @@ public class LoginActivity extends Activity{
     private Button loginbtn=null;
     private Button safecodebtn=null;
     private ImageView codeimg=null;
-    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +77,7 @@ public class LoginActivity extends Activity{
                                     new Runnable() {
                                         @Override
                                         public void run() {
-                                            showProgressDialog();
+                                            ProgressDialogHelper.showProgressDialog(LoginActivity.this,"正在加载...");
                                         }
                                     }
                             );
@@ -94,7 +94,7 @@ public class LoginActivity extends Activity{
                                             Log.d("TAG", "image over");
                                         }
                                     });
-                                    closeProgressDialog();
+                                    ProgressDialogHelper.closeProgressDialog();
                                 }
 
                                 @Override
@@ -197,18 +197,4 @@ public class LoginActivity extends Activity{
         MobclickAgent.onPause(this);
     }
 
-    public  void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("正在加载...");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        progressDialog.show();
-    }
-
-    private  void closeProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
-    }
 }

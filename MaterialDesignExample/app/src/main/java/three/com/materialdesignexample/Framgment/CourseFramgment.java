@@ -28,6 +28,7 @@ import three.com.materialdesignexample.Models.Course;
 import three.com.materialdesignexample.R;
 import three.com.materialdesignexample.Util.HandleResponseUtil;
 import three.com.materialdesignexample.Util.HttpUtil;
+import three.com.materialdesignexample.widget.ProgressDialogHelper;
 
 /**
  * Created by Administrator on 2015/10/15.
@@ -63,7 +64,8 @@ public class CourseFramgment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showProgressDialog();
+                                ProgressDialogHelper.showProgressDialog(getActivity(),
+                                        "正在导入，这可能需要一点时间...");
                             }
                         });
 
@@ -76,7 +78,7 @@ public class CourseFramgment extends Fragment {
                             public void run() {
 
                                 initViewPage();
-                                closeProgressDialog();
+                                ProgressDialogHelper.closeProgressDialog();
                             }
                         });
                         Log.d("TAG", "handle course OK");
@@ -161,21 +163,6 @@ public class CourseFramgment extends Fragment {
         coursesList.setAdapter(courseAdapter);
 
         return coursesList;
-    }
-
-    public  void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("正在导入，这可能需要一点时间...");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        progressDialog.show();
-    }
-
-    private  void closeProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
     }
 
 

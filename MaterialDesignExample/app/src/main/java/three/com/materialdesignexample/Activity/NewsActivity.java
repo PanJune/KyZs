@@ -1,6 +1,5 @@
 package three.com.materialdesignexample.Activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,6 +24,7 @@ import three.com.materialdesignexample.Models.News;
 import three.com.materialdesignexample.R;
 import three.com.materialdesignexample.Util.HandleResponseUtil;
 import three.com.materialdesignexample.Util.HttpUtil;
+import three.com.materialdesignexample.widget.ProgressDialogHelper;
 
 /**
  * Created by Administrator on 2015/10/9.
@@ -35,8 +35,6 @@ public class NewsActivity extends AppCompatActivity {
     private WebView newsWebView;
     private ScrollView scrollView;
     private static News mNews;
-    private final static String EXTRA_NEWS = "extra_news";
-    public ProgressDialog progressDialog=null;
 
     public static void startNewsActivity(Context context, News news) {
         Intent intent = new Intent(context, NewsActivity.class);
@@ -52,13 +50,13 @@ public class NewsActivity extends AppCompatActivity {
         HttpUtil.getHtmlUtil(this, mNews.getPath(), new CallBack() {
             @Override
             public void onStart() {
-                showProgressDialog();
+                ProgressDialogHelper.showProgressDialog(NewsActivity.this, "正在加载...");
             }
 
             @Override
             public void onFinsh(String response) {
                 HandleResponseUtil.parseContentData(response);
-                closeProgressDialog();
+                ProgressDialogHelper.closeProgressDialog();
                 newsTv.setText(mNews.getContent());
                 HandleResponseUtil.handleNewsHtmlStr(response, new CallBack() {
                     @Override
@@ -100,11 +98,6 @@ public class NewsActivity extends AppCompatActivity {
         actionBar.setTitle("新闻");
         //actionBar.setSubtitle(data.getDate());
 
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("正在加载...");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
     }
 
     @Override
@@ -135,15 +128,7 @@ public class NewsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public  void showProgressDialog() {
-        progressDialog.show();
-    }
 
-    private  void closeProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
-    }
 
     @Override
     public void onResume() {

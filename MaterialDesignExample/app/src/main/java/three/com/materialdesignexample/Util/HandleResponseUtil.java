@@ -330,6 +330,7 @@ public class HandleResponseUtil {
             @Override
             protected Boolean doInBackground(String... params) {
                 scores.clear();
+                db.clear("Score");
                 Boolean result=false;
 
                 try {
