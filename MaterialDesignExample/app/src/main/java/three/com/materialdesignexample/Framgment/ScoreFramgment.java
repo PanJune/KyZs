@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +38,10 @@ public class ScoreFramgment extends Fragment {
     private ArrayList<Score> scoreData= HandleResponseUtil.scores;
     private ProgressDialog progressDialog;
     private TextView allScore_tv;
+    private ScoreAdapter scoreAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.score_framgment, null);
         emptyLayout= (LinearLayout) view.findViewById(R.id.empty_layout);
@@ -47,8 +50,30 @@ public class ScoreFramgment extends Fragment {
         scoreLayout= (LinearLayout) view.findViewById(R.id.score_layout);
         h_v=view.findViewById(R.id.h_v);
         allScore_tv= (TextView) view.findViewById(R.id.allScore_tv);
+        swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        scoreAdapter=new ScoreAdapter(getActivity(),scoreData);
 
-        findFromDb();
+        findFromDb();   //先查数据库
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                HttpUtil.getScoreHtml(getActivity(), new CallBack() {
+                    @Override
+                    public void onStart() {
+                        swipeRefreshLayout.setRefreshing(true);
+                    }
+
+                    @Override
+                    public void onFinsh(String response) {
+                        saveAllScore();
+                        initView();
+                        swipeRefreshLayout.setRefreshing(false);
+                        Log.d("TAG", "refresh score OK");
+                    }
+                });
+            }
+        });
 
         importBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,10 +127,12 @@ public class ScoreFramgment extends Fragment {
 
     private void initView(){
         setAllScore();
-        scoreLv.setAdapter(new ScoreAdapter(getActivity(),scoreData));
+        scoreAdapter.notifyDataSetChanged();
+        scoreLv.setAdapter(scoreAdapter);
         scoreLv.setVisibility(View.VISIBLE);
         emptyLayout.setVisibility(View.GONE);
         scoreLayout.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
         h_v.setVisibility(View.VISIBLE);
     }
 
