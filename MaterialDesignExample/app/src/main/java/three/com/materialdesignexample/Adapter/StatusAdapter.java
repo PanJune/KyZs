@@ -4,12 +4,14 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVObject;
 
 import java.util.List;
+
+import three.com.materialdesignexample.Db.DbOpenHelper;
+import three.com.materialdesignexample.R;
 
 /**
  * Created by Administrator on 2015/10/26.
@@ -40,20 +42,39 @@ public class StatusAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+
+        Viewholder holder=null;
+
+        if(convertView==null){
+            holder=new Viewholder();
+            convertView = View.inflate(context, R.layout.status_item_list, null);
+            holder.nameTv= (TextView) convertView.findViewById(R.id.status_name_tv);
+            holder.dateTv= (TextView) convertView.findViewById(R.id.status_time_tv);
+            holder.contentTv= (TextView) convertView.findViewById(R.id.status_content_tv);
+            holder.commentBtn = (TextView) convertView.findViewById(R.id.status_comment_btn);
+            holder.allLayout = convertView.findViewById(R.id.all_layout);
+            convertView.setTag(holder);
+        }
+        else
+            holder= (Viewholder) convertView.getTag();
+
+        AVObject avObject=data.get(position);
+        //名字
+        holder.nameTv.setText(avObject.getString(DbOpenHelper.STATUS_USER));
+        //时间
+        holder.dateTv.setText(avObject.getCreatedAt().toString());
+        //内容
+        holder.contentTv.setText(avObject.getString(DbOpenHelper.STATUS_CONTETT));
+
+        return convertView;
     }
 
     private static class Viewholder {
 
         TextView nameTv;
         TextView dateTv;
-        TextView categoryTv;
-        TextView titleTv;
         TextView contentTv;
-        LinearLayout imageLayout;
         TextView commentBtn;
-        TextView deviceTv;
-        TextView locationTv;
         View allLayout;
     }
 }

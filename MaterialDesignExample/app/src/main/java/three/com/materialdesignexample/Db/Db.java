@@ -5,8 +5,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import three.com.materialdesignexample.CallBack;
 import three.com.materialdesignexample.Models.Course;
 import three.com.materialdesignexample.Models.News;
+import three.com.materialdesignexample.Models.PhoneInfo;
 import three.com.materialdesignexample.Models.Score;
 import three.com.materialdesignexample.Util.HandleResponseUtil;
 
@@ -105,6 +113,7 @@ public class Db {
         return false;
     }
 
+
     public boolean loadCourse(){
 
         Cursor cursor= sqlDb.query("Course", null, null,null, null, null, null);
@@ -138,5 +147,72 @@ public class Db {
 
     public void clear(String tableName){
         sqlDb.execSQL("DELETE FROM " +tableName);
+    }
+
+    public void savePerson(JSONArray jsonArray, ArrayList<PhoneInfo> phoneInfos) {
+
+        phoneInfos.clear();
+        JSONObject peopleObj ;
+        try {
+            sqlDb.beginTransaction();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                peopleObj = jsonArray.getJSONObject(i);
+
+                PhoneInfo phoneInfo = new PhoneInfo();
+                phoneInfo.setPeopleName(peopleObj.getString("学生姓名"));
+                phoneInfo.setPhoneNumber(peopleObj.getString("手机短号"));
+                phoneInfo.setClassName(peopleObj.getString("班级名称"));
+                phoneInfo.setSchoolNumber(peopleObj.getString("学号"));
+                phoneInfos.add(phoneInfo);
+                if (phoneInfo != null) {
+                    ContentValues values = new ContentValues();
+                    values.put("schoolNumber", phoneInfo.getSchoolNumber());
+                    values.put("peopleName", phoneInfo.getPeopleName());
+                    values.put("phoneNumber", phoneInfo.getPhoneNumber());
+                    values.put("className", phoneInfo.getClassName());
+                    sqlDb.insert("Phone", null, values);
+                }
+
+            }
+            sqlDb.setTransactionSuccessful();
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+        }
+        finally {
+            sqlDb.endTransaction();
+        }
+
+    }
+
+    public boolean loadPhoneInfo(ArrayList<PhoneInfo> phoneInfos,CallBack callBack) {
+        Cursor cursor= sqlDb.query("Phone", null, null,null, null, null, null);
+        int flag=0;
+        phoneInfos.clear();
+        if(cursor.moveToFirst()){
+            callBack.onStart();
+            do{
+                flag=1;
+
+                PhoneInfo phoneInfo=new PhoneInfo();
+                phoneInfo.setSchoolNumber(cursor.getString(cursor.getColumnIndex("schoolNumber")));
+                phoneInfo.setClassName(cursor.getString(cursor.getColumnIndex("className")));
+                phoneInfo.setPeopleName(cursor.getString(cursor.getColumnIndex("peopleName")));
+                phoneInfo.setPhoneNumber(cursor.getString(cursor.getColumnIndex("phoneNumber")));
+
+                phoneInfos.add(phoneInfo);
+            }while(cursor.moveToNext());
+
+            if(cursor!=null){
+                cursor.close();
+            }
+            if(flag==1){
+                callBack.onFinsh(null);
+                return true;
+            }
+
+        }
+        return false;
     }
 }

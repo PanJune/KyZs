@@ -17,8 +17,6 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 
 import three.com.materialdesignexample.Db.DbOpenHelper;
@@ -83,7 +81,7 @@ public class AddActivity extends AppCompatActivity {
     private void uploadStatus(final Context context) {
 
         if (TextUtils.isEmpty(content_et.getText().toString().trim())) {
-            Toast.makeText(context, "内容不可为空", Toast.LENGTH_SHORT);
+            Toast.makeText(context, "内容不可为空", Toast.LENGTH_SHORT).show();
 
             return;
         }
@@ -105,11 +103,11 @@ public class AddActivity extends AppCompatActivity {
             public void done(AVException e) {
                 ProgressDialogHelper.closeProgressDialog();
                 if (e == null) {
-                    Toast.makeText(context, "哇，成功了", Toast.LENGTH_SHORT);
+                    Toast.makeText(context, "哇，成功了", Toast.LENGTH_SHORT).show();
                     AddActivity.this.finish();
                     Log.d("winson", "上传对象成功");
                 } else {
-                    Toast.makeText(context, "唉，失败了，再试试", Toast.LENGTH_SHORT);
+                    Toast.makeText(context, "唉，失败了，再试试", Toast.LENGTH_SHORT).show();
                     Log.d("winson", "上传对象失败：" + e.getMessage());
                 }
             }

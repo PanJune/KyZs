@@ -45,26 +45,44 @@ public class StatusFramgment extends android.support.v4.app.Fragment {
         swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.status_swipe_container);
         fab= (FloatingActionButton) view.findViewById(R.id.status_add_fab);
 
-
-
         statusAdapter=new StatusAdapter(getActivity(),data);
         statusList.setAdapter(statusAdapter);
 
         initFab();
 
-        findNewData(getActivity(),AVQuery.CachePolicy.NETWORK_ONLY,new FindCallback<AVObject>() {
+        swipeRefreshLayout.setColorSchemeColors(R.color.mainColor);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getStatus();
+            }
+        });
+
+        return view;
+    }
+
+    private void getStatus() {
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
+
+        findNewData(getActivity(), AVQuery.CachePolicy.NETWORK_ONLY,new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if (e == null) {
                     if (list.size() == 0) {
-                        Toast.makeText(getActivity(),"没有任何帖子",Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity(), "没有任何帖子", Toast.LENGTH_SHORT).show();
                     }
                     Log.d("winson", list.size() + "个");
                     notifyDataSetChanged(list, true);
                     statusList.setSelection(0);
+                    swipeRefreshLayout.setRefreshing(false);
                 } else {
                     if (!e.getMessage().contains("Cache")) {
-                        Toast.makeText(getActivity(),"你的网络好像有点问题，刷新试试吧",Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity(),"你的网络好像有点问题，刷新试试吧",Toast.LENGTH_SHORT).show();
                     }
 
                     Log.d("winson", "出错：" + e.getMessage());
@@ -74,7 +92,6 @@ public class StatusFramgment extends android.support.v4.app.Fragment {
                 }
             }
         });
-        return view;
     }
 
     private void notifyDataSetChanged(List<AVObject> list, boolean isRefresh) {
@@ -108,10 +125,16 @@ public class StatusFramgment extends android.support.v4.app.Fragment {
         if(avQuery.hasCachedResult()) {
             avQuery.clearCachedResult();
         }
-        //取(Integer) SharedPreferencesUtil.get(context, SharedPreferencesUtil.PER_GOODS_STATUS_COUNT, 10)条
+//        //取(Integer) SharedPreferencesUtil.get(context, SharedPreferencesUtil.PER_GOODS_STATUS_COUNT, 10)条
         avQuery.setLimit(10);
         //id降序
         avQuery.orderByDescending("createdAt");
         avQuery.findInBackground(callback);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getStatus();
     }
 }

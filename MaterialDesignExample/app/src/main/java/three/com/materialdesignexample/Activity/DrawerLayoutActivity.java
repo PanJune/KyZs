@@ -18,6 +18,7 @@ import three.com.materialdesignexample.CallBack;
 import three.com.materialdesignexample.Framgment.AboutFragment;
 import three.com.materialdesignexample.Framgment.CourseFramgment;
 import three.com.materialdesignexample.Framgment.NewsFramgment;
+import three.com.materialdesignexample.Framgment.PhoneFramgment;
 import three.com.materialdesignexample.Framgment.ScoreFramgment;
 import three.com.materialdesignexample.Framgment.StatusFramgment;
 import three.com.materialdesignexample.Models.News;
@@ -86,6 +87,9 @@ public class DrawerLayoutActivity extends AppCompatActivity {
                             case R.id.school_status:
                                 switchToStatus();
                                 break;
+                            case R.id.school_phone:
+                                switchToPhone();
+                                break;
                             case R.id.about:
                                 switchToAbout();
                                 break;
@@ -95,6 +99,13 @@ public class DrawerLayoutActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+    }
+
+    private void switchToPhone() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new PhoneFramgment()).commit();
+
+        toolbar.setTitle(R.string.school_phone);
+
     }
 
     private void switchToStatus() {

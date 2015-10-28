@@ -38,6 +38,13 @@ public class DbOpenHelper extends SQLiteOpenHelper {
             + "examScore text,"
             + "credit text)";
 
+    public static final String CREATE_PHONE ="create table Phone ("
+            + "id integer primary key autoincrement,"
+            + "schoolNumber text,"
+            + "peopleName text,"
+            + "phoneNumber text,"
+            + "className text)";
+
     public DbOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         mcontext=context;
@@ -48,6 +55,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_NEWS);
         db.execSQL(CREATE_COURSE);
         db.execSQL(CREATE_SCORE);
+        db.execSQL(CREATE_PHONE);
     }
 
     @Override

@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,6 +22,7 @@ import three.com.materialdesignexample.Db.Db;
 import three.com.materialdesignexample.Framgment.NewsFramgment;
 import three.com.materialdesignexample.Models.Course;
 import three.com.materialdesignexample.Models.News;
+import three.com.materialdesignexample.Models.PhoneInfo;
 import three.com.materialdesignexample.Models.Score;
 
 /**
@@ -375,4 +378,20 @@ public class HandleResponseUtil {
 
     }
 
+    public static void handlePhoneHtmlStr(String response, CallBack callback, ArrayList<PhoneInfo> phoneInfos) {
+
+        try{
+
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("rows");
+            Log.i("test","begin");
+            db.savePerson(jsonArray,phoneInfos);
+            callback.onFinsh(null);
+            Log.i("test","emd");
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
 }

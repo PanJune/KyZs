@@ -58,6 +58,8 @@ public class HttpUtil  {
                                     final Map<String, String> headers
                                     ){
 
+        callBack.onStart();
+
         mcontext=context;
 
         StringRequest stringRequest = null;
@@ -74,9 +76,6 @@ public class HttpUtil  {
                         @Override
                         public void onResponse(String response) {
 
-                            Log.d("TAG", response);
-
-                            callBack.onStart();
                             callBack.onFinsh(response);
                         }
                     }, new Response.ErrorListener() {
