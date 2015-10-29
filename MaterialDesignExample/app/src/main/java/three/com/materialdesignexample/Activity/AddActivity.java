@@ -97,6 +97,7 @@ public class AddActivity extends AppCompatActivity {
         //发布人(学生)
         avObject.put(DbOpenHelper.STATUS_USER, HttpUtil.userName);
 
+
         avObject.setFetchWhenSave(true);
         avObject.saveInBackground(new SaveCallback() {
             @Override

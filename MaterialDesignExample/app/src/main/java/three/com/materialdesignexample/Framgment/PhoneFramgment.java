@@ -39,6 +39,7 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
     private PhoneAdapter phoneAdapter;
     private LinearLayout emptyLayout;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,50 +50,55 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
         phoneAdapter=new PhoneAdapter(getActivity(),phoneInfos);
         swipeRefreshLayout.setColorSchemeColors(R.color.mainColor);
         emptyLayout= (LinearLayout) view.findViewById(R.id.empty_layout);
+
+
         setHasOptionsMenu(true);
-        
+
         findFromDb();
 
         import_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HttpUtil.getHtmlUtil(getActivity(), "http://Xg.ndky.edu.cn/android/GetAllstudenttelephone.aspx", new CallBack() {
-                            @Override
-                            public void onStart() {
-                                ProgressDialogHelper.showProgressDialog(getActivity(), "正在载入...");
-                            }
-
-                            @Override
-                            public void onFinsh(final String response) {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        HandleResponseUtil.handlePhoneHtmlStr(response, new CallBack() {
-                                            @Override
-                                            public void onStart() {
-
-                                            }
-
-                                            @Override
-                                            public void onFinsh(String response) {
-                                                getActivity().runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        ProgressDialogHelper.closeProgressDialog();
-                                                        initView();
-                                                    }
-                                                });
-                                            }
-                                        }, phoneInfos);
-                                    }
-                                }).start();
-                            }
-                        },
-                        Request.Method.GET, null);
+                findFromHttp();
             }
         });
-
         return view;
+    }
+
+    private void findFromHttp() {
+        HttpUtil.getHtmlUtil(getActivity(), "http://Xg.ndky.edu.cn/android/GetAllstudenttelephone.aspx", new CallBack() {
+                    @Override
+                    public void onStart() {
+                        ProgressDialogHelper.showProgressDialog(getActivity(), "正在载入...");
+                    }
+
+                    @Override
+                    public void onFinsh(final String response) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                HandleResponseUtil.handlePhoneHtmlStr(response, new CallBack() {
+                                    @Override
+                                    public void onStart() {
+
+                                    }
+
+                                    @Override
+                                    public void onFinsh(String response) {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                ProgressDialogHelper.closeProgressDialog();
+                                                initView();
+                                            }
+                                        });
+                                    }
+                                }, phoneInfos);
+                            }
+                        }).start();
+                    }
+                },
+                Request.Method.GET, null);
     }
 
     private void initView(){
@@ -180,4 +186,6 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
