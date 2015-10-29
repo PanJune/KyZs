@@ -22,7 +22,7 @@ email : <threezj@hotmail.com>
 
 ![Demo Screenshot 1](https://github.com/threezj/KyZs/blob/master/art/1.jpg)
 
-![Demo Screenshot 1](https://github.com/threezj/KyZs/blob/master/art/2.png)
+![Demo Screenshot 1](https://github.com/threezj/KyZs/blob/master/art/2.jpg)
 
 ![Demo Screenshot 1](https://github.com/threezj/KyZs/blob/master/art/3.jpg)
 
@@ -32,4 +32,4 @@ email : <threezj@hotmail.com>
 
 ![Demo Screenshot 1](https://github.com/threezj/KyZs/blob/master/art/6.jpg)
 
-![Demo Screenshot 1](https://github.com/threezj/KyZs/blob/master/art/7.png)
+![Demo Screenshot 1](https://github.com/threezj/KyZs/blob/master/art/7.jpg)
