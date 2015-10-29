@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_send"
         android:title="发送"
-        android:icon="@drawable/ic_send_white_24dp"
+        android:icon="@mipmap/ic_send_white_24dp"
         android:orderInCategory="2"
         app:showAsAction="always" />
 

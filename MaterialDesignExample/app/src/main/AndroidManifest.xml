@@ -37,7 +37,8 @@
                 android:theme="@style/AppCompatActivityTheme">
 
         </activity>
-
+        <activity android:name=".Activity.SearchStatusActivity"
+            android:theme="@style/AppCompatActivityTheme"></activity>
         <service
             android:name="com.umeng.update.net.DownloadingService"
             android:process=":DownloadingService" >

@@ -215,4 +215,32 @@ public class Db {
         }
         return false;
     }
+
+    public boolean loadPhoneInfoByName(String name, ArrayList<PhoneInfo> phoneInfos) {
+        Cursor cursor= sqlDb.query("Phone", null, "peopleName=?",new String[]{String.valueOf(name)}, null, null, null);
+        int flag=0;
+        phoneInfos.clear();
+        if(cursor.moveToFirst()){
+            do{
+                flag=1;
+
+                PhoneInfo phoneInfo=new PhoneInfo();
+                phoneInfo.setSchoolNumber(cursor.getString(cursor.getColumnIndex("schoolNumber")));
+                phoneInfo.setClassName(cursor.getString(cursor.getColumnIndex("className")));
+                phoneInfo.setPeopleName(cursor.getString(cursor.getColumnIndex("peopleName")));
+                phoneInfo.setPhoneNumber(cursor.getString(cursor.getColumnIndex("phoneNumber")));
+
+                phoneInfos.add(phoneInfo);
+            }while(cursor.moveToNext());
+
+            if(cursor!=null){
+                cursor.close();
+            }
+            if(flag==1){
+                return true;
+            }
+
+        }
+        return false;
+    }
 }

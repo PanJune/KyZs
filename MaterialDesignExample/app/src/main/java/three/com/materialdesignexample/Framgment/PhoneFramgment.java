@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,6 +17,7 @@ import com.android.volley.Request;
 
 import java.util.ArrayList;
 
+import three.com.materialdesignexample.Activity.SearchStatusActivity;
 import three.com.materialdesignexample.Adapter.PhoneAdapter;
 import three.com.materialdesignexample.CallBack;
 import three.com.materialdesignexample.Db.Db;
@@ -45,9 +49,8 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
         phoneAdapter=new PhoneAdapter(getActivity(),phoneInfos);
         swipeRefreshLayout.setColorSchemeColors(R.color.mainColor);
         emptyLayout= (LinearLayout) view.findViewById(R.id.empty_layout);
-
-
-
+        setHasOptionsMenu(true);
+        
         findFromDb();
 
         import_btn.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +59,7 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
                 HttpUtil.getHtmlUtil(getActivity(), "http://Xg.ndky.edu.cn/android/GetAllstudenttelephone.aspx", new CallBack() {
                             @Override
                             public void onStart() {
-                                ProgressDialogHelper.showProgressDialog(getActivity(),"正在载入...");
+                                ProgressDialogHelper.showProgressDialog(getActivity(), "正在载入...");
                             }
 
                             @Override
@@ -80,7 +83,7 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
                                                     }
                                                 });
                                             }
-                                        },phoneInfos);
+                                        }, phoneInfos);
                                     }
                                 }).start();
                             }
@@ -100,12 +103,13 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
                 phone_lv.setAdapter(phoneAdapter);
                 phone_lv.setVisibility(View.VISIBLE);
                 emptyLayout.setVisibility(View.GONE);
-                if(swipeRefreshLayout.isRefreshing())
+                if (swipeRefreshLayout.isRefreshing())
                     swipeRefreshLayout.setRefreshing(false);
             }
         });
 
     }
+
 
     private void findFromDb() {
         new Thread(new Runnable() {
@@ -158,5 +162,22 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
             }
         }).start();
 
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.phone_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //noinspection SimplifiableIfStatement
+        int id = item.getItemId();
+        if(id == R.id.action_search) {
+            SearchStatusActivity.startSearchStatusActivity(getActivity());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
