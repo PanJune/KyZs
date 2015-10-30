@@ -10,8 +10,10 @@ import com.avos.avoscloud.AVObject;
 
 import java.util.List;
 
+import three.com.materialdesignexample.Activity.StatusActivity;
 import three.com.materialdesignexample.Db.DbOpenHelper;
 import three.com.materialdesignexample.R;
+import three.com.materialdesignexample.widget.TimeHelper;
 
 /**
  * Created by Administrator on 2015/10/26.
@@ -58,13 +60,28 @@ public class StatusAdapter extends BaseAdapter {
         else
             holder= (Viewholder) convertView.getTag();
 
-        AVObject avObject=data.get(position);
+        final AVObject avObject=data.get(position);
         //名字
         holder.nameTv.setText(avObject.getString(DbOpenHelper.STATUS_USER));
         //时间
-        holder.dateTv.setText(avObject.getCreatedAt().toString());
+        holder.dateTv.setText(TimeHelper.timeToFriendlyTime(avObject.getCreatedAt().toString()));
         //内容
         holder.contentTv.setText(avObject.getString(DbOpenHelper.STATUS_CONTETT));
+        //评论
+        holder.commentBtn.setText(avObject.getLong(DbOpenHelper.STATUS_COUNT) + "");
+        //打开详细页面
+        holder.allLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StatusActivity.startStatusActivity(context, avObject.getObjectId());
+            }
+        });
+        holder.commentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StatusActivity.startStatusActivity(context, avObject.getObjectId());
+            }
+        });
 
         return convertView;
     }

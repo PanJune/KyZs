@@ -126,6 +126,7 @@ public class LoginActivity extends Activity{
         if (prefs.getBoolean("cookie_OK", false)) {
             HttpUtil.cookie=prefs.getString("cookie",null);
             HttpUtil.userName=prefs.getString("username",null);
+            HttpUtil.yourName=prefs.getString("yourname",null);
             Intent intent = new Intent(this, DrawerLayoutActivity.class);
             startActivity(intent);
             finish();
@@ -183,6 +184,7 @@ public class LoginActivity extends Activity{
         editor.putBoolean("cookie_OK", true);
         editor.putString("cookie", HttpUtil.cookie);
         editor.putString("username",HttpUtil.userName);
+        editor.putString("yourname",HttpUtil.yourName);
         editor.commit();
     }
     @Override

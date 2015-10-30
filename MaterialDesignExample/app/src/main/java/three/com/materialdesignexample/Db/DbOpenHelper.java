@@ -66,5 +66,11 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     public static final String STATUS_TABLE="Status";
     public static final String STATUS_CONTETT="content";
     public static final String STATUS_USER="user";
+    public static final String STATUS_COUNT="count";
 
+    public static final String COMMENT_TABLE="Comment";
+    public static final String COMMENT_CONTETT="content";
+    public static final String COMMENT_SENDUSER="send_user";
+    public static final String COMMENT_RECEIVE_USER="receive_user";
+    public static final String COMMENT_STATUS = "status";
 }

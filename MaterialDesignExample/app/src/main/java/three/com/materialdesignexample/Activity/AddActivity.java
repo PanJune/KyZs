@@ -95,8 +95,8 @@ public class AddActivity extends AppCompatActivity {
         //内容
         avObject.put(DbOpenHelper.STATUS_CONTETT, content_et.getText().toString().trim());
         //发布人(学生)
-        avObject.put(DbOpenHelper.STATUS_USER, HttpUtil.userName);
-
+        avObject.put(DbOpenHelper.STATUS_USER, HttpUtil.yourName);
+        avObject.put(DbOpenHelper.STATUS_COUNT,0);
 
         avObject.setFetchWhenSave(true);
         avObject.saveInBackground(new SaveCallback() {

@@ -83,7 +83,7 @@
                 android:background="@drawable/btn_transparent_lightgrey"
                 android:id="@+id/status_comment_btn"
                 android:text="0"
-                android:drawableLeft="@drawable/ic_insert_comment_black_18dp"
+                android:drawableLeft="@mipmap/ic_insert_comment_black_18dp"
                 android:drawablePadding="4dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"

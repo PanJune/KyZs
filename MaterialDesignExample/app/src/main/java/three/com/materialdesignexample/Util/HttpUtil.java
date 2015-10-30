@@ -273,13 +273,13 @@ public class HttpUtil  {
         }
 
     }
-    private static String yourName;
+    public static String yourName;
 
     private static void getYourName(String content) {
 
         if (!TextUtils.isEmpty(content)) {
             Document document = Jsoup.parse(content);
-            Elements pElements  = document.select("lable[id=NAME]");
+            Elements pElements  = document.select("mytable").select("row").select("name");
             String str=null;
             for (Element e : pElements) {
                 str= e.text();
