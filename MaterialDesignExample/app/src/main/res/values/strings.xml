@@ -27,4 +27,17 @@
     <string name="tip" >登陆时请确保校园网环境下登陆，验证码不能连续获取两次以上</string>
     <string name="school_status">校友圈子</string>
     <string name="school_phone">电话查询</string>
+    <string name="deleteMsg">是否要删除这条评论?不能恢复的哦</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+
+
+    <string-array name="comment_option_0">
+        <item>回复</item>
+        <item>删除</item>
+    </string-array>
+    <string-array name="comment_option_1">
+        <item>回复</item>
+    </string-array>
+
 </resources>

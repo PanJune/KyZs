@@ -49,6 +49,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
                 R.string.drawer_open, R.string.drawer_close);
 
         drawerToggle.syncState();
+
         drawerLayout.setDrawerListener(drawerToggle);
 
         navigationView= (NavigationView) findViewById(R.id.navigation_view);
@@ -113,6 +114,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new StatusFramgment()).commit();
 
         toolbar.setTitle(R.string.school_status);
+
     }
 
     private void switchToScore() {
@@ -120,6 +122,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new ScoreFramgment()).commit();
 
         toolbar.setTitle(R.string.school_score);
+
     }
 
     private void switchToNews() {
@@ -140,6 +143,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
             }, Request.Method.GET, null);
         }
         toolbar.setTitle(R.string.school_news);
+
     }
 
     private void switchToCourse() {
@@ -148,6 +152,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
 
         toolbar.setTitle(R.string.school_course);
 
+
     }
 
 
@@ -155,6 +160,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new AboutFragment()).commit();
         toolbar.setTitle(R.string.about);
+        
     }
 
 

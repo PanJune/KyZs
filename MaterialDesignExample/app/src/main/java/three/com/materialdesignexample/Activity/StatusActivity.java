@@ -1,6 +1,8 @@
 package three.com.materialdesignexample.Activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,6 +25,7 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.DeleteCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
@@ -55,6 +59,7 @@ public class StatusActivity extends AppCompatActivity {
     private List<AVObject> data = new ArrayList<AVObject>();
     private SwipeRefreshLayout swipeRefreshLayout;
     private View footerView;
+    private AVObject staObject=null;
 
     public static void startStatusActivity(Context context, String objectId) {
         Intent intent = new Intent(context, StatusActivity.class);
@@ -105,12 +110,93 @@ public class StatusActivity extends AppCompatActivity {
 
         commentAdapter = new CommentAdapter(this, data);
         listView.setAdapter(commentAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showOptionDialog(StatusActivity.this, data.get((int) id));
+            }
+        });
+
         initStatusData();
         initCommentData();
     }
 
+    /**
+     * 显示选项dialog
+     */
+    private void showOptionDialog(final Context context, final AVObject avComment) {
 
-    private AVObject staObject=null;
+        AlertDialog alertDialog = null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        String[] optionArray = null;
+
+        //若为本人
+        if (HttpUtil.yourName.equals(avComment.getString(DbOpenHelper.COMMENT_SENDUSER))) {
+            optionArray = getResources().getStringArray(R.array.comment_option_0);
+        }
+        //若为普通用户
+        else {
+            optionArray = getResources().getStringArray(R.array.comment_option_1);
+        }
+
+        builder.setItems(optionArray, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //回复
+                if (which == 0) {
+                    receiveStudent = avComment.getString(DbOpenHelper.COMMENT_SENDUSER);
+                    commentEt.setHint("回复 " + receiveStudent + " 的评论");
+                }
+                //删除
+                else {
+                    showDeleteDialog(context, avComment, new DeleteCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e == null) {
+                                footerView.setVisibility(View.GONE);
+                                Toast.makeText(StatusActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                                addCommentCount(false);
+
+                            } else {
+                                Toast.makeText(StatusActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                                Log.d("winson", "删除失败：" + e.getMessage());
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * 显示删除dialog
+     * @param context
+     * @param avComment
+     */
+    public static void showDeleteDialog(Context context, final AVObject avComment, final DeleteCallback callback) {
+        AlertDialog alertDialog = null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.deleteMsg)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        avComment.deleteInBackground(callback);
+
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
 
     public void initStatusData(){
         findByObjectId(AVQuery.CachePolicy.CACHE_THEN_NETWORK, new GetCallback<AVObject>() {
@@ -203,9 +289,25 @@ public class StatusActivity extends AppCompatActivity {
     private void addCommentCount(boolean isadded) {
         if(isadded){
             staObject.increment(DbOpenHelper.STATUS_COUNT);
-            staObject.saveInBackground();
-            initStatusData();
-            findNewData(AVQuery.CachePolicy.CACHE_THEN_NETWORK);
+            staObject.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    initStatusData();
+                    findNewData(AVQuery.CachePolicy.CACHE_THEN_NETWORK);
+                }
+            });
+
+        }
+        else {
+            staObject.increment(DbOpenHelper.STATUS_COUNT, -1);
+            staObject.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    initStatusData();
+                    findNewData(AVQuery.CachePolicy.CACHE_THEN_NETWORK);
+                }
+            });
+
         }
     }
 
@@ -221,7 +323,7 @@ public class StatusActivity extends AppCompatActivity {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if (e == null) {
-                    Log.d("winson", list.size() + "个");
+                    Log.d("winson,findNewData", list.size() + "个");
 
                     notifyDataSetChanged(list, true);
 
