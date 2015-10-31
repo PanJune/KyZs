@@ -160,7 +160,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new AboutFragment()).commit();
         toolbar.setTitle(R.string.about);
-        
+
     }
 
 
