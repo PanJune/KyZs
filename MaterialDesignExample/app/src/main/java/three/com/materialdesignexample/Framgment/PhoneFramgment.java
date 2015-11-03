@@ -3,6 +3,7 @@ package three.com.materialdesignexample.Framgment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,6 +49,7 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
         import_btn= (Button) view.findViewById(R.id.import_btn);
         phone_lv= (ListView) view.findViewById(R.id.phone_lv);
         phoneAdapter=new PhoneAdapter(getActivity(),phoneInfos);
+
         swipeRefreshLayout.setColorSchemeColors(R.color.mainColor);
         emptyLayout= (LinearLayout) view.findViewById(R.id.empty_layout);
 
@@ -56,9 +58,17 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
 
         findFromDb();
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                findFromHttp();
+            }
+        });
+
         import_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ProgressDialogHelper.showProgressDialog(getActivity(), "正在载入...");
                 findFromHttp();
             }
         });
@@ -69,7 +79,7 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
         HttpUtil.getHtmlUtil(getActivity(), "http://Xg.ndky.edu.cn/android/GetAllstudenttelephone.aspx", new CallBack() {
                     @Override
                     public void onStart() {
-                        ProgressDialogHelper.showProgressDialog(getActivity(), "正在载入...");
+
                     }
 
                     @Override
@@ -88,8 +98,8 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                ProgressDialogHelper.closeProgressDialog();
                                                 initView();
+                                                ProgressDialogHelper.closeProgressDialog();
                                             }
                                         });
                                     }
@@ -102,17 +112,14 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
     }
 
     private void initView(){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                phoneAdapter.notifyDataSetChanged();
-                phone_lv.setAdapter(phoneAdapter);
-                phone_lv.setVisibility(View.VISIBLE);
-                emptyLayout.setVisibility(View.GONE);
-                if (swipeRefreshLayout.isRefreshing())
-                    swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        Log.d("TAG","initview");
+        Log.d("TAG",phoneInfos.get(0).getClassName().toString());
+        phoneAdapter.notifyDataSetChanged();
+        phone_lv.setAdapter(phoneAdapter);
+        phone_lv.setVisibility(View.VISIBLE);
+        emptyLayout.setVisibility(View.GONE);
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
 
     }
 
