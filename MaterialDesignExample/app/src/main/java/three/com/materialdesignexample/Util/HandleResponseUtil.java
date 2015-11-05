@@ -385,6 +385,7 @@ public class HandleResponseUtil {
             JSONObject jsonObject = new JSONObject(response);
             JSONArray jsonArray = jsonObject.getJSONArray("rows");
             Log.i("test","begin");
+            db.clear("Phone");
             db.savePerson(jsonArray,phoneInfos);
             callback.onFinsh(null);
             Log.i("test","emd");
