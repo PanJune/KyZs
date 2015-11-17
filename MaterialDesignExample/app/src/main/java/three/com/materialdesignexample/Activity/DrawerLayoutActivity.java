@@ -1,6 +1,7 @@
 package three.com.materialdesignexample.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.multidex.MultiDex;
@@ -8,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.android.volley.Request;
@@ -56,10 +58,14 @@ public class DrawerLayoutActivity extends AppCompatActivity {
         setupDrawerContent(navigationView);
         UmengUpdateAgent.update(this);
 
-
-
         switchToCourse();  //主界面选为课表
 
+
+        if(TextUtils.isEmpty(HttpUtil.yourName)){
+            Intent login =new Intent(this,LoginActivity.class);
+            startActivity(login);
+            finish();
+        }
 
     }
 

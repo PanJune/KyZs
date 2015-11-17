@@ -24,7 +24,7 @@ import three.com.materialdesignexample.Util.HandleResponseUtil;
 public class Db {
 
     public static final String DB_NAME="school_info.db";
-    public static final int VERSION=1;
+    public static final int VERSION=2;
     private static Db db;
     private SQLiteDatabase sqlDb;
 

@@ -273,7 +273,7 @@ public class HttpUtil  {
         }
 
     }
-    public static String yourName;
+    public static String yourName="";
 
     private static void getYourName(String content) {
 

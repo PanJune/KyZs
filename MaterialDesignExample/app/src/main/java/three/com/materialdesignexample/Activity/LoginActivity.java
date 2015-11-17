@@ -130,6 +130,8 @@ public class LoginActivity extends Activity{
             HttpUtil.cookie=prefs.getString("cookie",null);
             HttpUtil.userName=prefs.getString("username",null);
             HttpUtil.yourName=prefs.getString("yourname",null);
+            if(TextUtils.isEmpty(HttpUtil.yourName))
+                return;
             Intent intent = new Intent(this, DrawerLayoutActivity.class);
             startActivity(intent);
             finish();

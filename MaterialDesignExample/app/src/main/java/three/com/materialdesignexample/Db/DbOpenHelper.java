@@ -55,12 +55,11 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_NEWS);
         db.execSQL(CREATE_COURSE);
         db.execSQL(CREATE_SCORE);
-        db.execSQL(CREATE_PHONE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL(CREATE_PHONE);
     }
 
     public static final String STATUS_TABLE="Status";
