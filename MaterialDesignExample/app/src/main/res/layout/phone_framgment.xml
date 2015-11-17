@@ -41,7 +41,7 @@
         <TextView
             android:padding="16dp"
             android:gravity="center"
-            android:text="若多次导入失败，请检查你的网络连接"
+            android:text="因不可抗力，导入时不能用寝室wifi，另外网络都行。若多次导入失败，请检查你的网络连接"
             android:textColor="#aaaaaa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

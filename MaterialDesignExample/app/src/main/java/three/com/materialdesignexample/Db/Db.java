@@ -216,8 +216,8 @@ public class Db {
         return false;
     }
 
-    public boolean loadPhoneInfoByName(String name, ArrayList<PhoneInfo> phoneInfos) {
-        Cursor cursor= sqlDb.query("Phone", null, "peopleName=?",new String[]{String.valueOf(name)}, null, null, null);
+    public boolean  loadPhoneInfoByName(String name, ArrayList<PhoneInfo> phoneInfos) {
+        Cursor cursor= sqlDb.query("Phone", null, "peopleName like ?",new String[]{"%"+String.valueOf(name)+"%"}, null, null, null);
         int flag=0;
         phoneInfos.clear();
         if(cursor.moveToFirst()){

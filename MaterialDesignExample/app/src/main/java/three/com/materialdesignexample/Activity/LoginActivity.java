@@ -91,6 +91,8 @@ public class LoginActivity extends Activity{
                                         @Override
                                         public void run() {
                                             codeimg.setImageBitmap(codemap);
+                                            codeimg.setVisibility(View.VISIBLE);
+                                            safecodebtn.setVisibility(View.GONE);
                                             Log.d("TAG", "image over");
                                         }
                                     });
@@ -110,6 +112,7 @@ public class LoginActivity extends Activity{
                                                     .show();
                                         }
                                     });
+                                    ProgressDialogHelper.closeProgressDialog();
                                 }
                             });
 

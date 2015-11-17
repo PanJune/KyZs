@@ -3,6 +3,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/no_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="找不到这个人"
+        android:layout_marginTop="20px"
+        android:visibility="gone"/>
 
     <ListView
         android:id="@+id/search_listView"

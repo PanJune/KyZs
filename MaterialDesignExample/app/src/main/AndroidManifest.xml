@@ -37,7 +37,7 @@
                 android:theme="@style/AppCompatActivityTheme">
 
         </activity>
-        <activity android:name=".Activity.SearchStatusActivity"
+        <activity android:name=".Activity.SearchActivity"
             android:theme="@style/AppCompatActivityTheme"></activity>
 
         <activity android:name=".Activity.StatusActivity"

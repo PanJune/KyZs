@@ -1,8 +1,14 @@
 package three.com.materialdesignexample.Framgment;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -18,7 +25,7 @@ import com.android.volley.Request;
 
 import java.util.ArrayList;
 
-import three.com.materialdesignexample.Activity.SearchStatusActivity;
+import three.com.materialdesignexample.Activity.SearchActivity;
 import three.com.materialdesignexample.Adapter.PhoneAdapter;
 import three.com.materialdesignexample.CallBack;
 import three.com.materialdesignexample.Db.Db;
@@ -72,7 +79,49 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
                 findFromHttp();
             }
         });
+
+        phone_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String number = ((PhoneInfo) parent.getItemAtPosition(position)).getPhoneNumber();
+                Log.d("tag", number);
+                String flag = number.substring(0, 2);
+                if (!TextUtils.isEmpty(flag) && !flag.equals("  ")) {
+                    showDeleteDialog(getActivity(), number);
+                } else {
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("善意的提醒")
+                            .setPositiveButton("确定", null)
+                            .setMessage("未查询到电话号码")
+                            .show();
+                }
+            }
+        });
         return view;
+    }
+
+    public void showDeleteDialog(Context context, final String number) {
+        android.app.AlertDialog alertDialog = null;
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+        builder.setMessage("是否要拨打电话?")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Uri uri = Uri.parse("tel:"+number);
+                        Intent it = new Intent(Intent.ACTION_DIAL, uri);
+                        startActivity(it);
+
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void findFromHttp() {
@@ -118,6 +167,7 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
         phone_lv.setAdapter(phoneAdapter);
         phone_lv.setVisibility(View.VISIBLE);
         emptyLayout.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
         if (swipeRefreshLayout.isRefreshing())
             swipeRefreshLayout.setRefreshing(false);
 
@@ -188,7 +238,7 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
         //noinspection SimplifiableIfStatement
         int id = item.getItemId();
         if(id == R.id.action_search) {
-            SearchStatusActivity.startSearchStatusActivity(getActivity());
+            SearchActivity.startSearchStatusActivity(getActivity());
             return true;
         }
         return super.onOptionsItemSelected(item);

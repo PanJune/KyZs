@@ -44,6 +44,7 @@ public class PhoneAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if(convertView == null) {
+
             holder = new ViewHolder();
             convertView = View.inflate(context, R.layout.phone_item_list, null);
             holder.head_name_tv = (TextView) convertView.findViewById(R.id.head_name_tv);
@@ -52,6 +53,7 @@ public class PhoneAdapter extends BaseAdapter{
             holder.name_tv = (TextView) convertView.findViewById(R.id.name_tv);
             holder.school_number_tv= (TextView) convertView.findViewById(R.id.school_number_tv);
             convertView.setTag(holder);
+
         }
         else {
             holder = (ViewHolder) convertView.getTag();
