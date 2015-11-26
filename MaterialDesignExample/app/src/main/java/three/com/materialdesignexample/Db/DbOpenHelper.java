@@ -55,6 +55,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_NEWS);
         db.execSQL(CREATE_COURSE);
         db.execSQL(CREATE_SCORE);
+        db.execSQL(CREATE_PHONE);
     }
 
     @Override
