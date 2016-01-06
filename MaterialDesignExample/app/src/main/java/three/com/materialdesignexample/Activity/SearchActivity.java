@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +22,7 @@ import three.com.materialdesignexample.Db.Db;
 import three.com.materialdesignexample.Models.PhoneInfo;
 import three.com.materialdesignexample.R;
 import three.com.materialdesignexample.Util.HandleResponseUtil;
+import three.com.materialdesignexample.widget.AlertDialogHelper;
 
 /**
  * Created by Administrator on 2015/10/28.
@@ -44,6 +44,11 @@ public class SearchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_status);
 
+        initView();
+
+    }
+
+    private void initView() {
         search_list= (ListView) findViewById(R.id.search_listView);
         phoneAdapter=new PhoneAdapter(this,phoneInfos);
         search_list.setAdapter(phoneAdapter);
@@ -51,9 +56,8 @@ public class SearchActivity extends BaseActivity {
 
         //设置actionBar的标题
         actionBar.setTitle("搜索联系人");
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setElevation(0);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setElevation(0);
 
         search_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -64,15 +68,10 @@ public class SearchActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(flag) && !flag.equals("  ")) {
                     showDeleteDialog(SearchActivity.this, number);
                 } else {
-                    new AlertDialog.Builder(SearchActivity.this)
-                            .setTitle("善意的提醒")
-                            .setPositiveButton("确定", null)
-                            .setMessage("未查询到电话号码")
-                            .show();
+                    AlertDialogHelper.showAlertDialog(SearchActivity.this, "善意的提醒", "未查询到电话号码");
                 }
             }
         });
-
     }
 
     public void showDeleteDialog(Context context, final String number) {

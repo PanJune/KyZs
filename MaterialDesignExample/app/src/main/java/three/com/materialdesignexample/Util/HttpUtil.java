@@ -40,6 +40,7 @@ import three.com.materialdesignexample.CallBack;
 import three.com.materialdesignexample.InterFace.LoginCallback;
 import three.com.materialdesignexample.JsHelper.HexMd5;
 import three.com.materialdesignexample.Models.News;
+import three.com.materialdesignexample.widget.AlertDialogHelper;
 
 /**
  * Created by Administrator on 2015/10/8.
@@ -56,7 +57,7 @@ public class HttpUtil  {
 
     private static Context mcontext;
 
-    public static void getHtmlUtil( Context context,String url, final CallBack callBack,final int method,
+    public static void getHtmlUtil( final Context context,String url, final CallBack callBack,final int method,
                                     final Map<String, String> headers
                                     ){
 
@@ -83,6 +84,7 @@ public class HttpUtil  {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    AlertDialogHelper.showAlertDialog(context,"出问题了","导入失败，请检查你的网络");
                     Log.e("TAG", error.getMessage(), error);
                 }
             })
@@ -116,7 +118,7 @@ public class HttpUtil  {
         }
         //设置8秒的超时
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                8000,
+                10000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mQueue.add(stringRequest);

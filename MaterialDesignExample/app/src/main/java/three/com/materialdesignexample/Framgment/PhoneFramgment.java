@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +32,7 @@ import three.com.materialdesignexample.Models.PhoneInfo;
 import three.com.materialdesignexample.R;
 import three.com.materialdesignexample.Util.HandleResponseUtil;
 import three.com.materialdesignexample.Util.HttpUtil;
+import three.com.materialdesignexample.widget.AlertDialogHelper;
 import three.com.materialdesignexample.widget.ProgressDialogHelper;
 
 /**
@@ -52,19 +52,8 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.phone_framgment,null);
-        swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        import_btn= (Button) view.findViewById(R.id.import_btn);
-        phone_lv= (ListView) view.findViewById(R.id.phone_lv);
-        phoneAdapter=new PhoneAdapter(getActivity(),phoneInfos);
-
-        swipeRefreshLayout.setColorSchemeColors(R.color.mainColor);
-        emptyLayout= (LinearLayout) view.findViewById(R.id.empty_layout);
-
-
-        setHasOptionsMenu(true);
-
+        initView(view);
         findFromDb();
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -79,7 +68,7 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
                 findFromHttp();
             }
         });
-
+        //设置电话点击监听
         phone_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -89,15 +78,22 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
                 if (!TextUtils.isEmpty(flag) && !flag.equals("  ")) {
                     showDeleteDialog(getActivity(), number);
                 } else {
-                    new AlertDialog.Builder(getActivity())
-                            .setTitle("善意的提醒")
-                            .setPositiveButton("确定", null)
-                            .setMessage("未查询到电话号码")
-                            .show();
+                    AlertDialogHelper.showAlertDialog(getActivity(), "善意的提醒", "未查询到电话号码");
                 }
             }
         });
         return view;
+    }
+
+    private void initView(View view) {
+        swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        import_btn= (Button) view.findViewById(R.id.import_btn);
+        phone_lv= (ListView) view.findViewById(R.id.phone_lv);
+        phoneAdapter=new PhoneAdapter(getActivity(),phoneInfos);
+
+        swipeRefreshLayout.setColorSchemeColors(R.color.mainColor);
+        emptyLayout= (LinearLayout) view.findViewById(R.id.empty_layout);
+        setHasOptionsMenu(true);
     }
 
     public void showDeleteDialog(Context context, final String number) {
@@ -179,39 +175,13 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
             @Override
             public void run() {
                 if(phoneInfos.size()==0){
+                    //获取db，应用单例子模式，待重构
                     if(HandleResponseUtil.db==null){
                         HandleResponseUtil.db= Db.getInstance(getActivity());
                     }
                     if(HandleResponseUtil.db!=null){
 
-                        HandleResponseUtil.db.loadPhoneInfo(phoneInfos, new CallBack() {
-                            @Override
-                            public void onStart() {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        swipeRefreshLayout.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                swipeRefreshLayout.setRefreshing(true);
-                                            }
-                                        });
-                                        swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                        emptyLayout.setVisibility(View.GONE);
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onFinsh(String response) {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        initView();
-                                    }
-                                });
-                            }
-                        });
+                        loadPhoneInfoFormDb();//查数据库
                     }
                 }
                 else{
@@ -225,6 +195,37 @@ public class PhoneFramgment extends android.support.v4.app.Fragment {
             }
         }).start();
 
+    }
+
+    private void loadPhoneInfoFormDb() {
+        HandleResponseUtil.db.loadPhoneInfo(phoneInfos, new CallBack() {
+            @Override
+            public void onStart() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                swipeRefreshLayout.setRefreshing(true);
+                            }
+                        });
+                        swipeRefreshLayout.setVisibility(View.VISIBLE);
+                        emptyLayout.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            @Override
+            public void onFinsh(String response) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        initView();
+                    }
+                });
+            }
+        });
     }
 
 

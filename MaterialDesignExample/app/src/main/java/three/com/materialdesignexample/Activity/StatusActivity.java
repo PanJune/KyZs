@@ -66,34 +66,35 @@ public class StatusActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("TAG", "statusActivity starting");
         setContentView(R.layout.activity_status);
 
+        initView();
+
+        initStatusData();
+        initCommentData();
+    }
+
+    private void initView() {
         actionBar.setTitle("帖子");
 
         listView = (ListView) findViewById(R.id.comment_listView);
         commentEt = (EditText) findViewById(R.id.comment_et);
         sendBtn = (Button) findViewById(R.id.comment_send_btn);
-        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.status_swipe_container);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                initStatusData();
-                findNewData(AVQuery.CachePolicy.CACHE_THEN_NETWORK);
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
 
-        //header
+        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.status_swipe_container);
+
+        setSwipeRefreshListener();
+
+        //headerView
         headerView = View.inflate(this, R.layout.status_hearder, null);
         nameTv = (TextView) headerView.findViewById(R.id.status_name_tv);
         dateTv = (TextView) headerView.findViewById(R.id.status_time_tv);
         contentTv = (TextView) headerView.findViewById(R.id.status_content_tv);
         imageLayout = (LinearLayout) headerView.findViewById(R.id.status_image_layout);
         commentBtn = (TextView) headerView.findViewById(R.id.status_comment_btn);
-
         headerView.setVisibility(View.GONE);
-        //加载更多进度条
+
+        //FootView
         footerView = View.inflate(this, R.layout.footer_progress, null);
         footerView.setVisibility(View.GONE);
         listView.addFooterView(footerView);
@@ -112,9 +113,17 @@ public class StatusActivity extends BaseActivity {
                 showOptionDialog(StatusActivity.this, data.get((int) id));
             }
         });
+    }
 
-        initStatusData();
-        initCommentData();
+    private void setSwipeRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initStatusData();
+                findNewData(AVQuery.CachePolicy.CACHE_THEN_NETWORK);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     /**

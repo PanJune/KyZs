@@ -46,13 +46,16 @@ public class CourseFramgment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.course_framgment, null);
-        pager = (ViewPager) view.findViewById(R.id.viewPager);
-        tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tab_indicator);
-        requestCourse= (Button) view.findViewById(R.id.import_btn);
-        emptyLayout = (LinearLayout) view.findViewById(R.id.empty_layout);
+        initView(view);
 
         findFromDb();
 
+        setImprotCourseBtnListener();
+
+        return view;
+    }
+
+    private void setImprotCourseBtnListener() {
         requestCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,8 +88,13 @@ public class CourseFramgment extends Fragment {
                 });
             }
         });
+    }
 
-        return view;
+    private void initView(View view) {
+        pager = (ViewPager) view.findViewById(R.id.viewPager);
+        tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tab_indicator);
+        requestCourse= (Button) view.findViewById(R.id.import_btn);
+        emptyLayout = (LinearLayout) view.findViewById(R.id.empty_layout);
     }
 
     private void findFromDb() {
