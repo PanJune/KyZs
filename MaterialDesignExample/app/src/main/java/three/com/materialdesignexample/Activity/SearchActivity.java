@@ -3,13 +3,9 @@ package three.com.materialdesignexample.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,7 +27,7 @@ import three.com.materialdesignexample.Util.HandleResponseUtil;
 /**
  * Created by Administrator on 2015/10/28.
  */
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends BaseActivity {
     public static void startSearchStatusActivity(Context context) {
         Intent intent = new Intent(context, SearchActivity.class);
         context.startActivity(intent);
@@ -54,8 +50,6 @@ public class SearchActivity extends AppCompatActivity {
         no_preson_tv= (TextView) findViewById(R.id.no_person);
 
         //设置actionBar的标题
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2196f3")));
         actionBar.setTitle("搜索联系人");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

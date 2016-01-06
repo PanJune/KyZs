@@ -43,6 +43,19 @@ public class DrawerLayoutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
+        initView();
+        UmengUpdateAgent.update(this); //友盟更新api
+        switchToCourse();  //主界面选为课表
+
+        if(TextUtils.isEmpty(HttpUtil.yourName)){
+            Intent login =new Intent(this,LoginActivity.class);
+            startActivity(login);
+            finish();
+        }
+
+    }
+
+    private void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,17 +69,6 @@ public class DrawerLayoutActivity extends AppCompatActivity {
 
         navigationView= (NavigationView) findViewById(R.id.navigation_view);
         setupDrawerContent(navigationView);
-        UmengUpdateAgent.update(this);
-
-        switchToCourse();  //主界面选为课表
-
-
-        if(TextUtils.isEmpty(HttpUtil.yourName)){
-            Intent login =new Intent(this,LoginActivity.class);
-            startActivity(login);
-            finish();
-        }
-
     }
 
     @Override

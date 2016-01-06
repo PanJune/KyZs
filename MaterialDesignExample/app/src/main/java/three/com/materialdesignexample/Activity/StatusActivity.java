@@ -4,12 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +39,7 @@ import three.com.materialdesignexample.widget.TimeHelper;
 /**
  * Created by Administrator on 2015/10/30.
  */
-public class StatusActivity extends AppCompatActivity {
+public class StatusActivity extends BaseActivity {
 
     private  static String statusID;
     private ListView listView;
@@ -73,9 +69,7 @@ public class StatusActivity extends AppCompatActivity {
         Log.d("TAG", "statusActivity starting");
         setContentView(R.layout.activity_status);
 
-        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("帖子");
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2196f3")));
 
         listView = (ListView) findViewById(R.id.comment_listView);
         commentEt = (EditText) findViewById(R.id.comment_et);
@@ -89,6 +83,7 @@ public class StatusActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
         //header
         headerView = View.inflate(this, R.layout.status_hearder, null);
         nameTv = (TextView) headerView.findViewById(R.id.status_name_tv);

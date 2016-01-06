@@ -49,6 +49,7 @@ public class StatusFramgment extends android.support.v4.app.Fragment {
         fab = (FloatingActionButton) view.findViewById(R.id.status_add_fab);
 
         statusAdapter = new StatusAdapter(getActivity(), data);
+
         //加载更多进度条
         footerView = View.inflate(getActivity(), R.layout.footer_progress, null);
         footerView.setVisibility(View.GONE);

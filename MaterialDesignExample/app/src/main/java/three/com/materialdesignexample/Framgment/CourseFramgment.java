@@ -30,9 +30,8 @@ import three.com.materialdesignexample.Util.HandleResponseUtil;
 import three.com.materialdesignexample.Util.HttpUtil;
 import three.com.materialdesignexample.widget.ProgressDialogHelper;
 
-/**
- * Created by Administrator on 2015/10/15.
- */
+
+
 public class CourseFramgment extends Fragment {
 
     private ViewPager pager=null;
@@ -174,6 +173,7 @@ public class CourseFramgment extends Fragment {
         private ViewPagerAdapter(Context context, List<List<Course>> data) {
             this.context = context;
             this.data = data;
+
         }
 
         @Override

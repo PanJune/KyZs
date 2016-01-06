@@ -2,11 +2,7 @@ package three.com.materialdesignexample.Activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +12,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.umeng.analytics.MobclickAgent;
 
 import three.com.materialdesignexample.CallBack;
 import three.com.materialdesignexample.Db.Db;
@@ -29,7 +24,7 @@ import three.com.materialdesignexample.widget.ProgressDialogHelper;
 /**
  * Created by Administrator on 2015/10/9.
  */
-public class NewsActivity extends AppCompatActivity {
+public class NewsActivity extends BaseActivity {
 
     public  TextView newsTv;
     private WebView newsWebView;
@@ -93,11 +88,7 @@ public class NewsActivity extends AppCompatActivity {
         newsWebView.setInitialScale(10);
 
         //设置actionBar的标题
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2196f3")));
         actionBar.setTitle("新闻");
-        //actionBar.setSubtitle(data.getDate());
-
     }
 
     @Override
@@ -129,16 +120,4 @@ public class NewsActivity extends AppCompatActivity {
     }
 
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-    }
 }

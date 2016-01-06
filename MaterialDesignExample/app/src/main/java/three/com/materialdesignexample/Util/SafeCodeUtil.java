@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
@@ -65,6 +66,8 @@ public class SafeCodeUtil {
         getMethod.setHeader("Cookie",cookie.toString());
         getMethod.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36");
         getMethod.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        //设置超时
+        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 8000);
         Log.d("TAG",cookie.toString());
         try {
             HttpResponse response = httpClient.execute(getMethod, new BasicHttpContext());
@@ -85,7 +88,6 @@ public class SafeCodeUtil {
         final String url = "http://10.22.151.40/scripts/login.exe/getPassport?";
         final DefaultHttpClient httpClient = new DefaultHttpClient();
 
-
         try {
             String content =null;
             HttpPost post = new HttpPost(url);
@@ -93,7 +95,10 @@ public class SafeCodeUtil {
             post.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
             List params = new ArrayList();
             params.add(new BasicNameValuePair("UserName",username));
-            post.setEntity(new UrlEncodedFormEntity(params,"UTF-8"));
+            post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            //设置超时
+            httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 5000);
+
             HttpResponse response = httpClient.execute(post);
             if(response.getStatusLine().getStatusCode() ==200){
                 content = EntityUtils.toString(response.getEntity(), "GBK");

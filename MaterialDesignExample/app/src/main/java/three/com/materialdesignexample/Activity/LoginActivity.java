@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -17,9 +16,11 @@ import android.widget.ImageView;
 import com.umeng.analytics.MobclickAgent;
 
 import three.com.materialdesignexample.CallBack;
+import three.com.materialdesignexample.InterFace.LoginCallback;
 import three.com.materialdesignexample.R;
 import three.com.materialdesignexample.Util.HttpUtil;
 import three.com.materialdesignexample.Util.SafeCodeUtil;
+import three.com.materialdesignexample.widget.AlertDialogHelper;
 import three.com.materialdesignexample.widget.ProgressDialogHelper;
 
 /**
@@ -38,90 +39,95 @@ public class LoginActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
-        isCookieGet() ;
+        isCookieGet() ;    //判断是否登陆过
 
+        initView();
+
+        setLoginBtnListener();  //设置登录按钮监听
+
+        setSafecodeBtnListener(); //设置获取验证码按钮监听
+    }
+
+    private void setSafecodeBtnListener() {
+        safecodebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                user = loginuser.getText().toString();
+                if (TextUtils.isEmpty(user)) {
+                    AlertDialogHelper.showAlertDialog(LoginActivity.this, "善意的提醒", "请先填写学号");
+                } else {
+                    ProgressDialogHelper.showProgressDialog(LoginActivity.this, "正在加载...");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            fetchSafecodeImageHttpRequest();
+                        }
+                    }).start();
+                }
+            }
+        });
+    }
+
+    private void fetchSafecodeImageHttpRequest() {
+
+        SafeCodeUtil.getLoginCookie(user, new CallBack() {
+            @Override
+            public void onStart() {
+
+                final Bitmap codemap = SafeCodeUtil.getSafeCodePic();  //获取验证码图片
+
+                setImage(codemap);//设置验证码到界面上
+
+            }
+
+            @Override
+            public void onFinsh(String response) {
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ProgressDialogHelper.closeProgressDialog();
+                        AlertDialogHelper.showAlertDialog(LoginActivity.this, "善意的提醒", "请确保在校园网环境使用，或者账号密码正确");
+                    }
+                });
+
+            }
+        });
+    }
+
+    private void setImage(final Bitmap codemap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ProgressDialogHelper.closeProgressDialog();
+                codeimg.setImageBitmap(codemap);
+                codeimg.setVisibility(View.VISIBLE);
+                safecodebtn.setVisibility(View.GONE);
+                Log.d("TAG", "image over");
+            }
+        });
+    }
+
+    private void setLoginBtnListener() {
+        loginbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                user = loginuser.getText().toString();
+                pass = loginpass.getText().toString();
+                passport = passported.getText().toString();
+                saveUserAndPass();
+            }
+        });
+    }
+
+    private void initView() {
         loginuser= (EditText) findViewById(R.id.loginid_et);
         loginpass= (EditText) findViewById(R.id.loginpswd_et);
         passported=(EditText) findViewById(R.id.safecode_et);
         loginbtn= (Button) findViewById(R.id.login_ok_btn);
         safecodebtn=(Button) findViewById(R.id.safecode_btn);
         codeimg= (ImageView) findViewById(R.id.codeimg);
-
-        loginbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                user=loginuser.getText().toString();
-                pass=loginpass.getText().toString();
-                passport=passported.getText().toString();
-                saveUserAndPass();
-            }
-        });
-
-        safecodebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                user=loginuser.getText().toString();
-                if(TextUtils.isEmpty(user)){
-                    new AlertDialog.Builder(LoginActivity.this)
-                            .setTitle("善意的提醒")
-                            .setPositiveButton("确定", null)
-                            .setMessage("请先填写学号")
-                            .show();
-                }
-                else {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            runOnUiThread(
-                                    new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ProgressDialogHelper.showProgressDialog(LoginActivity.this,"正在加载...");
-                                        }
-                                    }
-                            );
-
-                            SafeCodeUtil.getLoginCookie(user, new CallBack() {
-                                @Override
-                                public void onStart() {
-                                    final Bitmap codemap = SafeCodeUtil.getSafeCodePic();
-                                    // 通过runOnUiThread()方法回到主线程处理逻辑
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            codeimg.setImageBitmap(codemap);
-                                            codeimg.setVisibility(View.VISIBLE);
-                                            safecodebtn.setVisibility(View.GONE);
-                                            Log.d("TAG", "image over");
-                                        }
-                                    });
-                                    ProgressDialogHelper.closeProgressDialog();
-                                }
-
-                                @Override
-                                public void onFinsh(String response) {
-                                    // 通过runOnUiThread()方法回到主线程处理逻辑
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            new AlertDialog.Builder(LoginActivity.this)
-                                                    .setTitle("善意的提醒")
-                                                    .setPositiveButton("确定", null)
-                                                    .setMessage("请确保在校园网环境使用")
-                                                    .show();
-                                        }
-                                    });
-                                    ProgressDialogHelper.closeProgressDialog();
-                                }
-                            });
-
-
-                        }
-                    }).start();
-                }
-            }
-        });
     }
 
     private void isCookieGet() {
@@ -146,43 +152,57 @@ public class LoginActivity extends Activity{
 
 
         if(TextUtils.isEmpty(user)||TextUtils.isEmpty(pass)||TextUtils.isEmpty(passport)){
-            new AlertDialog.Builder(this)
-                    .setTitle("善意的提醒")
-                    .setPositiveButton("确定", null)
-                    .setMessage("请填写完整的学号,密码和验证码")
-                    .show();
+            AlertDialogHelper.showAlertDialog(LoginActivity.this, "善意的提醒", "请填写完整的学号,密码和验证码");
         }
         else{
 
             HttpUtil.userName=user;
             HttpUtil.password=pass;
             HttpUtil.passport=passport;
-            HttpUtil.login(new CallBack() {
-                @Override
-                public void onStart() {
-                    saveCookie();
-                    Log.d("TAG","获取cookie成功");
-                    Intent intent = new Intent(LoginActivity.this, DrawerLayoutActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
 
-                @Override
-                public void onFinsh(String response) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new AlertDialog.Builder(LoginActivity.this)
-                                    .setTitle("善意的提醒")
-                                    .setPositiveButton("确定", null)
-                                    .setMessage("登陆失败,请确保账号密码输入正确,和在校园网下登陆")
-                                    .show();
-                        }
-                    });
-                }
-            });
+            login();
         }
     }
+
+    private void login() {
+        ProgressDialogHelper.showProgressDialog(this, "正在登陆...");
+        HttpUtil.login(new LoginCallback(){
+
+            @Override
+            public void beforeStart() {
+
+            }
+
+            @Override
+            public void onLoginFinshed() {
+                saveCookieAndStartMainActivity();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ProgressDialogHelper.closeProgressDialog();
+                        AlertDialogHelper.showAlertDialog(LoginActivity.this, "善意的提醒", "登陆失败,请确保账号密码输入正确,和在校园网下登陆");
+                    }
+                });
+
+            }
+        });
+
+
+    }
+
+    private void saveCookieAndStartMainActivity() {
+        saveCookie();
+        Log.d("TAG", "获取cookie成功");
+        ProgressDialogHelper.closeProgressDialog();
+        Intent intent = new Intent(LoginActivity.this, DrawerLayoutActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void saveCookie(){
 
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();

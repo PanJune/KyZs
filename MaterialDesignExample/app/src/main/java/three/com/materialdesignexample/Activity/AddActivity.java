@@ -1,11 +1,7 @@
 package three.com.materialdesignexample.Activity;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -27,7 +23,7 @@ import three.com.materialdesignexample.widget.ProgressDialogHelper;
 /**
  * Created by Administrator on 2015/10/26.
  */
-public class AddActivity extends AppCompatActivity {
+public class AddActivity extends BaseActivity {
     private EditText content_et;
     private AVObject editObject;
     @Override
@@ -35,9 +31,6 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_activity);
         content_et= (EditText) findViewById(R.id.content_et);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2196f3")));
         actionBar.setTitle("你的状态");
     }
 
@@ -47,6 +40,7 @@ public class AddActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.status, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

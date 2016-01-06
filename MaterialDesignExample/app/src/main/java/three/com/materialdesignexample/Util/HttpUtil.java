@@ -22,6 +22,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import three.com.materialdesignexample.CallBack;
+import three.com.materialdesignexample.InterFace.LoginCallback;
 import three.com.materialdesignexample.JsHelper.HexMd5;
 import three.com.materialdesignexample.Models.News;
 
@@ -112,9 +114,9 @@ public class HttpUtil  {
                 }
             };
         }
-        //设置20秒的超时
+        //设置8秒的超时
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                20000,
+                8000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mQueue.add(stringRequest);
@@ -127,26 +129,27 @@ public class HttpUtil  {
     public static String password="";
     public static String passport="";
     public static String LoginId="";
+    private static String plainText="";
+    private static String Digest="";
 
-    public static void login(final CallBack callBack){
+    public static void login(final LoginCallback loginCallback){
 
 
-        String Digest="";
-        String plainText="";
+        getFinalPostContent();//获取最终提交的表单
 
-        plainText=userName+LoginId+password+passport;
-        Digest= HexMd5.getMD5(plainText);
-        Log.d("TAG", "next url");
-
-        final String finalDigest = Digest;
-
+        //开启线程获取cookie，验证密码是否正确
         new Thread(new Runnable() {
             @Override
             public void run() {
-                getLoginCookie(finalDigest,callBack);
+                getLoginCookie(Digest,loginCallback);
             }
         }).start();
 
+    }
+
+    private static void getFinalPostContent() {
+        plainText=userName+LoginId+password+passport;
+        Digest= HexMd5.getMD5(plainText);
     }
 
     @SuppressWarnings("deprecation")
@@ -224,30 +227,36 @@ public class HttpUtil  {
     }
 
     @SuppressWarnings("deprecation")
-    public static void getLoginCookie(String Digest,CallBack callBack){
+    public static void getLoginCookie(String Digest,LoginCallback loginCallback){
 
         final String url = "http://10.22.151.40/scripts/login.exe/login?";
         final DefaultHttpClient httpClient = new DefaultHttpClient();
         StringBuilder ckSb=new StringBuilder(cookie);
 
         try {
+
             String content =null;
             HttpPost post = new HttpPost(url);
+            //设置请求头
             post.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36");
             post.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-            post.setHeader("Cookie",cookie );
+            post.setHeader("Cookie", cookie);
+            //设置post表单
             List params = new ArrayList();
-
             params.add(new BasicNameValuePair("UserName",userName));
-            params.add(new BasicNameValuePair("Digest",Digest));
-
-            post.setEntity(new UrlEncodedFormEntity(params,"UTF-8"));
+            params.add(new BasicNameValuePair("Digest", Digest));
+            //确定编码
+            post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            //设置超时
+            httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 5000);
+            //执行post
             HttpResponse response = httpClient.execute(post);
-            if(response.getStatusLine().getStatusCode() ==200){
-                content = EntityUtils.toString(response.getEntity(), "GBK");
 
-                getYourName(content);//获取姓名
-                // Log.d("TAG",content);
+            if(response.getStatusLine().getStatusCode() ==200){
+                //获取网页文本
+                content = EntityUtils.toString(response.getEntity(), "GBK");
+                //获取姓名
+                getYourName(content);
                 // get cookieStore
                 CookieStore cookieStore = httpClient.getCookieStore();
                 // get Cookies
@@ -259,16 +268,17 @@ public class HttpUtil  {
                     ckSb.append(cookies.get(2).getValue());
                     ckSb.append(";UserRoles=");
                     ckSb.append(cookies.get(3).getValue());
-                    cookie=ckSb.toString();
-                    callBack.onStart();
+                    cookie=ckSb.toString();//获取成功
+                    //成功获取后回调
+                    loginCallback.onLoginFinshed();
                 }
                 else {
-                    callBack.onFinsh(null);
+                    loginCallback.onError(null);
                     Log.d("TAG","获取Cookie失败");
                 }
             }
         } catch (Exception e) {
-            callBack.onFinsh(null);
+            loginCallback.onError(e);
             e.printStackTrace();
         }
 
@@ -288,6 +298,5 @@ public class HttpUtil  {
         }
 
     }
-
 
 }
