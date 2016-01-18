@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import three.com.materialdesignexample.Adapter.NewsAdapter;
 import three.com.materialdesignexample.CallBack;
 import three.com.materialdesignexample.Db.Db;
-import three.com.materialdesignexample.Framgment.NewsFramgment;
+import three.com.materialdesignexample.Fragment.NewsFragment;
 import three.com.materialdesignexample.Models.Course;
 import three.com.materialdesignexample.Models.News;
 import three.com.materialdesignexample.Models.PhoneInfo;
@@ -47,9 +47,9 @@ public class HandleResponseUtil {
                 news.setTitle(title);
                 HttpUtil.datamap.put(news.getPath(), news);
             }
-            NewsFramgment.adapter=new NewsAdapter(new ArrayList<News>(HttpUtil.datamap.values()), NewsAdapter.context);
-            NewsFramgment.recyclerView.setAdapter(NewsFramgment.adapter);
-            NewsFramgment.adapter.notifyDataSetChanged();
+            NewsFragment.adapter=new NewsAdapter(new ArrayList<News>(HttpUtil.datamap.values()), NewsAdapter.context);
+            NewsFragment.recyclerView.setAdapter(NewsFragment.adapter);
+            NewsFragment.adapter.notifyDataSetChanged();
         }
     }
 

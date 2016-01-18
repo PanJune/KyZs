@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +21,7 @@ import three.com.materialdesignexample.Util.HttpUtil;
 import three.com.materialdesignexample.Util.SafeCodeUtil;
 import three.com.materialdesignexample.widget.AlertDialogHelper;
 import three.com.materialdesignexample.widget.ProgressDialogHelper;
+import three.com.materialdesignexample.widget.SharedPreferencesHelper;
 
 /**
  * Created by Administrator on 2015/10/14.
@@ -33,6 +33,7 @@ public class LoginActivity extends Activity{
     private Button loginbtn=null;
     private Button safecodebtn=null;
     private ImageView codeimg=null;
+    private SharedPreferences prefs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +132,9 @@ public class LoginActivity extends Activity{
     }
 
     private void isCookieGet() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs==null){
+            prefs= SharedPreferencesHelper.getSharePreferences(this);
+        }
         if (prefs.getBoolean("cookie_OK", false)) {
             HttpUtil.cookie=prefs.getString("cookie",null);
             HttpUtil.userName=prefs.getString("username",null);
@@ -204,8 +207,10 @@ public class LoginActivity extends Activity{
     }
 
     private void saveCookie(){
-
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        if (prefs==null){
+            prefs= SharedPreferencesHelper.getSharePreferences(this);
+        }
+        SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("cookie_OK", true);
         editor.putString("cookie", HttpUtil.cookie);
         editor.putString("username",HttpUtil.userName);

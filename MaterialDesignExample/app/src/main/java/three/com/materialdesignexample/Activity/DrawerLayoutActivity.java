@@ -17,12 +17,12 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import three.com.materialdesignexample.CallBack;
-import three.com.materialdesignexample.Framgment.AboutFragment;
-import three.com.materialdesignexample.Framgment.CourseFramgment;
-import three.com.materialdesignexample.Framgment.NewsFramgment;
-import three.com.materialdesignexample.Framgment.PhoneFramgment;
-import three.com.materialdesignexample.Framgment.ScoreFramgment;
-import three.com.materialdesignexample.Framgment.StatusFramgment;
+import three.com.materialdesignexample.Fragment.AboutFragment;
+import three.com.materialdesignexample.Fragment.CourseFragment;
+import three.com.materialdesignexample.Fragment.NewsFragment;
+import three.com.materialdesignexample.Fragment.PhoneFragment;
+import three.com.materialdesignexample.Fragment.ScoreFragment;
+import three.com.materialdesignexample.Fragment.StatusFragment;
 import three.com.materialdesignexample.Models.News;
 import three.com.materialdesignexample.R;
 import three.com.materialdesignexample.Util.HandleResponseUtil;
@@ -111,7 +111,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
     }
 
     private void switchToPhone() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new PhoneFramgment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new PhoneFragment()).commit();
 
         toolbar.setTitle(R.string.school_phone);
 
@@ -119,7 +119,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
 
     private void switchToStatus() {
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new StatusFramgment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new StatusFragment()).commit();
 
         toolbar.setTitle(R.string.school_status);
 
@@ -127,14 +127,14 @@ public class DrawerLayoutActivity extends AppCompatActivity {
 
     private void switchToScore() {
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new ScoreFramgment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new ScoreFragment()).commit();
 
         toolbar.setTitle(R.string.school_score);
 
     }
 
     private void switchToNews() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new NewsFramgment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new NewsFragment()).commit();
         if(HttpUtil.datamap.values().size()==0){
             ProgressDialogHelper.showProgressDialog(this, "正在加载...");
             HttpUtil.getHtmlUtil(this, News.NEWS_INDEX, new CallBack() {
@@ -156,7 +156,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
 
     private void switchToCourse() {
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new CourseFramgment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new CourseFragment()).commit();
 
         toolbar.setTitle(R.string.school_course);
 

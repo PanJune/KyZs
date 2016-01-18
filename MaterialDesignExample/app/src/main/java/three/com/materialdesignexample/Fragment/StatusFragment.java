@@ -1,4 +1,4 @@
-package three.com.materialdesignexample.Framgment;
+package three.com.materialdesignexample.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,7 +30,7 @@ import three.com.materialdesignexample.R;
 /**
  * Created by Administrator on 2015/10/26.
  */
-public class StatusFramgment extends android.support.v4.app.Fragment {
+public class StatusFragment extends android.support.v4.app.Fragment {
 
     private ListView statusList;
     private SwipeRefreshLayout swipeRefreshLayout;

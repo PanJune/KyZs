@@ -1,4 +1,4 @@
-package three.com.materialdesignexample.Framgment;
+package three.com.materialdesignexample.Fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

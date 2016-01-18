@@ -41,6 +41,7 @@ import three.com.materialdesignexample.InterFace.LoginCallback;
 import three.com.materialdesignexample.JsHelper.HexMd5;
 import three.com.materialdesignexample.Models.News;
 import three.com.materialdesignexample.widget.AlertDialogHelper;
+import three.com.materialdesignexample.widget.ProgressDialogHelper;
 
 /**
  * Created by Administrator on 2015/10/8.
@@ -84,7 +85,8 @@ public class HttpUtil  {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    AlertDialogHelper.showAlertDialog(context,"出问题了","导入失败，请检查你的网络");
+                    ProgressDialogHelper.closeProgressDialog();
+                    AlertDialogHelper.showAlertDialog(context,"出问题了","导入失败，请检查你的网络,再次尝试");
                     Log.e("TAG", error.getMessage(), error);
                 }
             })
@@ -116,9 +118,9 @@ public class HttpUtil  {
                 }
             };
         }
-        //设置8秒的超时
+        //设置12秒的超时
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                10000,
+                12000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mQueue.add(stringRequest);

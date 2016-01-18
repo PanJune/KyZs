@@ -1,4 +1,4 @@
-package three.com.materialdesignexample.Framgment;
+package three.com.materialdesignexample.Fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,7 +28,7 @@ import three.com.materialdesignexample.widget.ProgressDialogHelper;
 /**
  * Created by Administrator on 2015/10/21.
  */
-public class ScoreFramgment extends Fragment {
+public class ScoreFragment extends Fragment {
 
     private LinearLayout emptyLayout ;
     private LinearLayout scoreLayout;
@@ -39,6 +39,7 @@ public class ScoreFramgment extends Fragment {
     private TextView allScore_tv;
     private ScoreAdapter scoreAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private SharedPreferences prefs;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
 
@@ -148,14 +149,18 @@ public class ScoreFramgment extends Fragment {
 
 
     private void setAllScore() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if(prefs==null) {
+            prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        }
 
         allScore_tv.setText(prefs.getString("allScore",null));
     }
 
     private void saveAllScore(){
-
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+        if(prefs==null) {
+            prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        }
+        SharedPreferences.Editor editor =prefs.edit();
         editor.putString("allScore",HandleResponseUtil.allScore);
         editor.commit();
     }

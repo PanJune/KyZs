@@ -1,7 +1,8 @@
-package three.com.materialdesignexample.Framgment;
+package three.com.materialdesignexample.Fragment;
 
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,9 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,6 +25,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import java.util.Calendar;
 import java.util.List;
 
+import three.com.materialdesignexample.Activity.LoginActivity;
 import three.com.materialdesignexample.Adapter.CourseAdapter;
 import three.com.materialdesignexample.CallBack;
 import three.com.materialdesignexample.Db.Db;
@@ -29,19 +34,18 @@ import three.com.materialdesignexample.R;
 import three.com.materialdesignexample.Util.HandleResponseUtil;
 import three.com.materialdesignexample.Util.HttpUtil;
 import three.com.materialdesignexample.widget.ProgressDialogHelper;
+import three.com.materialdesignexample.widget.SharedPreferencesHelper;
 
 
-
-public class CourseFramgment extends Fragment {
+public class CourseFragment extends Fragment {
 
     private ViewPager pager=null;
     private PagerSlidingTabStrip tabs=null;
     private ViewPagerAdapter vpAdapter=null;
     private Button requestCourse=null;
     private List<List<Course>> data= HandleResponseUtil.courseData;
-    private ProgressDialog progressDialog;
-    LinearLayout emptyLayout=null;
-
+    private LinearLayout emptyLayout=null;
+    private SharedPreferences sharedPreferences;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,6 +99,8 @@ public class CourseFramgment extends Fragment {
         tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tab_indicator);
         requestCourse= (Button) view.findViewById(R.id.import_btn);
         emptyLayout = (LinearLayout) view.findViewById(R.id.empty_layout);
+
+        setHasOptionsMenu(true);
     }
 
     private void findFromDb() {
@@ -235,5 +241,30 @@ public class CourseFramgment extends Fragment {
             View view = (View) object;
             container.removeView(view);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.logout_menu, menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //noinspection SimplifiableIfStatement
+        int id = item.getItemId();
+        if(id == R.id.action_logout) {
+            if(sharedPreferences==null){
+                sharedPreferences= SharedPreferencesHelper.getSharePreferences(getActivity());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.commit();
+                Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(loginIntent);
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

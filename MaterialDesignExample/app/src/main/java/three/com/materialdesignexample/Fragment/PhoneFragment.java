@@ -1,4 +1,4 @@
-package three.com.materialdesignexample.Framgment;
+package three.com.materialdesignexample.Fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,7 +38,7 @@ import three.com.materialdesignexample.widget.ProgressDialogHelper;
 /**
  * Created by Administrator on 2015/10/27.
  */
-public class PhoneFramgment extends android.support.v4.app.Fragment {
+public class PhoneFragment extends android.support.v4.app.Fragment {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private Button import_btn;

@@ -1,4 +1,4 @@
-package three.com.materialdesignexample.Framgment;
+package three.com.materialdesignexample.Fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,7 +20,7 @@ import three.com.materialdesignexample.Util.HttpUtil;
 /**
  * Created by Administrator on 2015/10/8.
  */
-public class NewsFramgment extends Fragment {
+public class NewsFragment extends Fragment {
 
     public static RecyclerView recyclerView=null;
     private RecyclerView.LayoutManager layoutManager=null;
