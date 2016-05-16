@@ -324,6 +324,7 @@ public class HandleResponseUtil {
                 break;
         }
     }
+
     public static ArrayList<Score> scores=new ArrayList<Score>();
     public static String allScore;
     public static void handleScoreHtmlStr(String htmlStr, final CallBack callBack) {

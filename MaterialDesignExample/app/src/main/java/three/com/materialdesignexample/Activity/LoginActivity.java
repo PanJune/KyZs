@@ -26,7 +26,7 @@ import three.com.materialdesignexample.widget.SharedPreferencesHelper;
 /**
  * Created by Administrator on 2015/10/14.
  */
-public class LoginActivity extends Activity{
+public class   LoginActivity extends Activity{
     private EditText loginuser=null;
     private EditText loginpass=null;
     private EditText passported=null;

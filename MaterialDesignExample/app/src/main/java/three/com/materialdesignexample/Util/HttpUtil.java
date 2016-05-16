@@ -57,16 +57,16 @@ public class HttpUtil  {
     public static String cookie="";
 
     private static Context mcontext;
+    private static Response.Listener<String> HttpResponseListener;
+    private static Response.ErrorListener HttpErrorListener;
 
     public static void getHtmlUtil( final Context context,String url, final CallBack callBack,final int method,
                                     final Map<String, String> headers
                                     ){
 
-        callBack.onStart();
-
-        mcontext=context;
-
+        callBack.onStart();   //请求开始
         StringRequest stringRequest = null;
+        mcontext=context;
 
         if(url.substring(0,1).equals("/")==true){
             path=url;
@@ -75,21 +75,10 @@ public class HttpUtil  {
 
         RequestQueue mQueue = Volley.newRequestQueue(context);
         if(method== Request.Method.GET){
-            stringRequest = new StringRequest(url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
 
-                            callBack.onFinsh(response);
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    ProgressDialogHelper.closeProgressDialog();
-                    AlertDialogHelper.showAlertDialog(context,"出问题了","导入失败，请检查你的网络,再次尝试");
-                    Log.e("TAG", error.getMessage(), error);
-                }
-            })
+            setHttpRequestListener(context, callBack);  //设置请求监听
+
+            stringRequest = new StringRequest(url, HttpResponseListener, HttpErrorListener) //StringRequest部分方法添加请头和改变编码
             {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
@@ -128,6 +117,25 @@ public class HttpUtil  {
 
     }
 
+    private static void setHttpRequestListener(final Context context, final CallBack callBack) {
+        HttpResponseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                callBack.onFinsh(response);
+            }
+        };
+
+        HttpErrorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                ProgressDialogHelper.closeProgressDialog();
+                AlertDialogHelper.showAlertDialog(context, "出问题了", "导入失败，请检查你的网络,再次尝试");
+                Log.e("TAG", error.getMessage(), error);
+            }
+        };
+    }
+
 
     public static String userName="";
     public static String password="";
@@ -163,12 +171,8 @@ public class HttpUtil  {
             @Override
             public void run() {
                 callBack.onStart();
-                String url = "http://10.22.151.40/scripts/wzw_jspk.asp?WHO=" + userName + "&year=2015&term=1&STUDENTNAME=" + yourName;
-//                try {
-//                    url = "http://10.22.151.40/scripts/wzw_jspk.asp?WHO=144173551&year=2015&term=1&STUDENTNAME=" + URLEncoder.encode("张坚", "UTF-8");
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
-//                }
+
+                String url = "http://10.22.151.40/scripts/wzw_jspk.asp?WHO=" + userName + "&year=2015&term=2&STUDENTNAME=" + yourName;
                 Map<String, String> headers = new HashMap<String, String>();
                 //设置referer
                 headers.put("Referer", "http://10.22.151.40/scripts/login.exe/login?");

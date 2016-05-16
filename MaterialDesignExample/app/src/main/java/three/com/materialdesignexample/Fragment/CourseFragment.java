@@ -255,16 +255,20 @@ public class CourseFragment extends Fragment {
         //noinspection SimplifiableIfStatement
         int id = item.getItemId();
         if(id == R.id.action_logout) {
-            if(sharedPreferences==null){
-                sharedPreferences= SharedPreferencesHelper.getSharePreferences(getActivity());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear();
-                editor.commit();
-                Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(loginIntent);
-            }
+            logout();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        if(sharedPreferences==null){
+            sharedPreferences= SharedPreferencesHelper.getSharePreferences(getActivity());
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.commit();
+            Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(loginIntent);
+        }
     }
 }
